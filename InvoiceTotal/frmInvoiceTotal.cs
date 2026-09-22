@@ -13,7 +13,7 @@ namespace InvoiceTotal
             decimal subtotal = Convert.ToDecimal(txtSubtotal.Text);
             decimal discountPct = 0m;
 
-            if (customerType == "R")
+            /*if (customerType == "R")
             {
                 if (subtotal < 100)
                     discountPct = .0m;
@@ -37,7 +37,19 @@ namespace InvoiceTotal
             else
             {
                 discountPct = .1m;
-            }
+            }*/
+
+            discountPct = customerType switch
+            {
+                "R" when subtotal < 100 => .0m,
+                "R" when subtotal >= 100 && subtotal < 250 => .1m,
+                "R" when subtotal >=250 && subtotal < 500 => .25m,
+                "R" when subtotal >= 500 => .3m,
+                "C" => .2m,
+                "T" when subtotal < 500 => .4m,
+                "T" when subtotal >= 500 => .5m,
+                _ => .1m
+            };
 
             decimal discountAmt = subtotal * discountPct;
             decimal invoiceTotal = subtotal - discountAmt;
